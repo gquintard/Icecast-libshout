@@ -47,6 +47,8 @@
 # define inline 	_inline
 #endif
 
+#define MAXPLUGINS 16
+
 /* -- local prototypes -- */
 static int send_queue(shout_t *self);
 static int get_response(shout_t *self);
@@ -58,8 +60,30 @@ static int parse_response(shout_t *self);
 
 /* -- static data -- */
 static int _initialized = 0;
+static shout_plugin_desc* desc_array[MAXPLUGINS] = {0};
 
 /* -- public functions -- */
+
+char *shout_mp3_mimes[] = {"audio/mpeg", NULL};
+shout_plugin_desc shout_mp3_desc = {
+	.name  = "mp3",
+	.mimes = shout_mp3_mimes,
+	.open  = shout_open_mp3
+};
+
+static void register_plugins(shout_plugin_desc *sd);
+static void register_plugins(shout_plugin_desc *sd)
+{
+	int i = 0;
+	/* find first empty slot (change that to a linked list)*/
+	while(i < MAXPLUGINS && desc_array[i])
+		i++;
+
+	if (i == MAXPLUGINS)
+		return;
+
+	desc_array[i] = sd;
+}
 
 void shout_init(void)
 {
@@ -67,6 +91,8 @@ void shout_init(void)
 		return;
 
 	sock_initialize();
+
+	register_plugins(&shout_mp3_desc);
 	_initialized = 1;
 }
 
@@ -844,8 +870,10 @@ int shout_set_format(shout_t *self, unsigned int format)
 	if (self->state != SHOUT_STATE_UNCONNECTED)
 		return self->error = SHOUTERR_CONNECTED;
 
+	if (format == SHOUT_FORMAT_MP3)
+		return shout_set_mime(self, "audio/mpeg"); 
+
 	if (format != SHOUT_FORMAT_OGG
-         && format != SHOUT_FORMAT_MP3
 	 && format != SHOUT_FORMAT_WEBM
 	 && format != SHOUT_FORMAT_WEBMAUDIO)
 		return self->error = SHOUTERR_UNSUPPORTED;
@@ -861,6 +889,33 @@ unsigned int shout_get_format(shout_t* self)
 		return 0;
 
 	return self->format;
+}
+
+/* find the first plugin corresponding to our mime */
+int shout_set_mime(shout_t *self, const char *mime)
+{
+	int i;
+	int j;
+	shout_plugin_desc *desc = NULL;
+	for (i=0; i < MAXPLUGINS && desc_array[i]; i++) {
+		desc = desc_array[i];
+		for (j=0; desc->mimes[j]; j++) {
+			if (strcmp(mime, desc->mimes[j]))
+				continue;
+
+			/* XXX: strdup?  probably not useful as desc won't change */
+			self->plugin = desc;
+			self->mime = desc->mimes[j];
+			self->format = SHOUT_FORMAT_PLUGIN;
+			return self->error = SHOUTERR_SUCCESS;
+		}
+	}
+	return self->error = SHOUTERR_UNSUPPORTED;
+}
+
+const char * shout_get_mime(shout_t *self, const char *mime)
+{
+	return self->mime;
 }
 
 int shout_set_protocol(shout_t *self, unsigned int protocol)
@@ -1246,13 +1301,15 @@ retry:
 			if ((rc = self->error = shout_open_ogg(self)) != SHOUTERR_SUCCESS)
                                 goto failure;
 			break;
-		case SHOUT_FORMAT_MP3:
-			if ((rc = self->error = shout_open_mp3(self)) != SHOUTERR_SUCCESS)
-                                goto failure;
-			break;
 		case SHOUT_FORMAT_WEBM:
 		case SHOUT_FORMAT_WEBMAUDIO:
 			if ((rc = self->error = shout_open_webm(self)) != SHOUTERR_SUCCESS)
+				goto failure;
+			break;
+		case SHOUT_FORMAT_PLUGIN:
+			if (!self->plugin || !self->plugin->open)
+				goto failure;
+			if ((rc = self->error = self->plugin->open(self)) != SHOUTERR_SUCCESS)
 				goto failure;
 			break;
 		default:

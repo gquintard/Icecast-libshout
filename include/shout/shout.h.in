@@ -45,6 +45,7 @@
 #define SHOUT_FORMAT_MP3		(1) /* audio/mpeg */
 #define SHOUT_FORMAT_WEBM		(2) /* video/webm */
 #define SHOUT_FORMAT_WEBMAUDIO		(3) /* audio/webm audio only */
+#define SHOUT_FORMAT_PLUGIN		(128) /* handled by plugin */
 
 /* backward-compatibility alias */
 #define SHOUT_FORMAT_VORBIS	SHOUT_FORMAT_OGG
@@ -192,6 +193,10 @@ unsigned int shout_get_public(shout_t *self);
 /* takes a SHOUT_FORMAT_xxxx argument */
 int shout_set_format(shout_t *self, unsigned int format);
 unsigned int shout_get_format(shout_t *self);
+
+/* sets formats and special handlers, takes a mime argument */
+int shout_set_mime(shout_t *self, const char *mime);
+const char * shout_get_mime(shout_t *self, const char *mime);
 
 /* takes a SHOUT_PROTOCOL_xxxxx argument */
 int shout_set_protocol(shout_t *self, unsigned int protocol);
