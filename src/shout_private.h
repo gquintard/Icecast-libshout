@@ -98,7 +98,13 @@ typedef enum {
 	SHOUT_STATE_CONNECTED,
 	SHOUT_STATE_RECONNECT
 } shout_state_e;
-	
+
+typedef struct {
+	char *name;   /* human readable plugin name */
+	char **mimes; /* null terminated string array*/
+	int (* open)(shout_t *self);
+} shout_plugin_desc;
+
 struct shout {
 	/* hostname or IP of icecast server */
 	char *host;
@@ -110,6 +116,9 @@ struct shout {
 	unsigned int protocol;
 	/* type of data being sent */
 	unsigned int format;
+	char *mime;
+	shout_plugin_desc *plugin;
+
 	/* audio encoding parameters */
 	util_dict *audio_info;
 
