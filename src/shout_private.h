@@ -174,8 +174,9 @@ struct shout {
 	int error;
 };
 
-void open_plugins(shout_plugin_desc** desc_array);
-void close_plugins(shout_plugin_desc** desc_array);
+void *open_plugins(void);
+void close_plugins(void *plugins);
+int plugin_selector(void *plugins, shout_t *self, const char *mime);
 
 int shout_open_ogg(shout_t *self);
 int shout_open_webm(shout_t *self);
