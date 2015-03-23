@@ -1399,17 +1399,15 @@ retry:
                         goto failure;
 		}
 
-		switch (self->format) {
-		case SHOUT_FORMAT_PLUGIN:
-			if (!self->plugin || !self->plugin->open)
-				goto failure;
-			if ((rc = self->error = self->plugin->open(self)) != SHOUTERR_SUCCESS)
-				goto failure;
-			break;
-		default:
-                        rc = SHOUTERR_INSANE;
-                        goto failure;
+		if (self->format != SHOUT_FORMAT_PLUGIN) {
+			rc = SHOUTERR_INSANE;
+			goto failure;
 		}
+		if (!self->plugin ||
+				!self->plugin->open ||
+				(rc = self->error = self->plugin->open(self)) != SHOUTERR_SUCCESS)
+			goto failure;
+		break;
 
 	case SHOUT_STATE_CONNECTED:
 		self->state = SHOUT_STATE_CONNECTED;
@@ -1553,17 +1551,15 @@ static int create_http_request(shout_t *self)
 	const char *key, *val;
 	const char *mimetype;
 
-	switch (self->format) {
-	case SHOUT_FORMAT_PLUGIN:
-		if (self->mime)
-			mimetype = self->mime;
-		else
-			mimetype = "unknown";
-		break;
-	default:
+	if (self->format != SHOUT_FORMAT_PLUGIN)
 		return SHOUTERR_INSANE;
-		break;
-	}
+
+	/* we should always have a mime, shouldn't we ?*/
+	if (self->mime)
+		mimetype = self->mime;
+	else
+		mimetype = "unknown";
+	break;
 
 	/* this is lazy code that relies on the only error from queue_* being
 	 * SHOUTERR_MALLOC */
