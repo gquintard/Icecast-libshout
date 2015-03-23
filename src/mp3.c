@@ -322,6 +322,7 @@ static void close_mp3(shout_t *self)
 
 shout_plugin_desc shout_plugin =
 {
+	.version = PLUGIN_API_VERSION;
 	.name  = "mp3",
 	.mimes = shout_mp3_mimes,
 	.open  = shout_open_mp3
