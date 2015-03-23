@@ -890,7 +890,7 @@ unsigned int shout_get_format(shout_t* self)
 /* find the first plugin corresponding to our mime */
 int shout_set_mime(shout_t *self, const char *mime)
 {
-	return plugin_selector(plugins, self, mime);
+	return plugin_selector(self, plugins, mime);
 }
 
 const char * shout_get_mime(shout_t *self, const char *mime)

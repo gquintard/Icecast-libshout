@@ -168,7 +168,7 @@ struct shout {
 
 void *open_plugins(void);
 void close_plugins(void *plugins);
-int plugin_selector(void *plugins, shout_t *self, const char *mime);
+int plugin_selector(shout_t *self, void *plugins, const char *mime);
 
 #ifdef HAVE_OPENSSL
 shout_tls_t *shout_tls_new(shout_t *self, sock_t socket);
