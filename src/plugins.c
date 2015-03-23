@@ -6,11 +6,12 @@
 
 typedef struct plugin_list {
 	shout_plugin_desc *plugin;
+	void *dlhandle;
 	struct plugin_list *next;
 } plugin_list;
 
-static struct plugin_list* register_plugins(struct plugin_list *list, shout_plugin_desc *desc);
-static struct plugin_list* register_plugins(struct plugin_list *list, shout_plugin_desc *desc)
+static struct plugin_list* register_plugins(struct plugin_list *list, shout_plugin_desc *desc, void *dlhandle);
+static struct plugin_list* register_plugins(struct plugin_list *list, shout_plugin_desc *desc, void *dlhandle)
 {
 	struct plugin_list *entry = malloc(sizeof(struct plugin_list));
 
@@ -19,6 +20,7 @@ static struct plugin_list* register_plugins(struct plugin_list *list, shout_plug
 
 	entry->next = list;
 	entry->plugin = desc;
+	entry->dlhandle = dlhandle;
 	return entry;
 }
 
@@ -27,7 +29,7 @@ void *open_plugins()
 	shout_plugin_desc *desc = NULL;
 	struct plugin_list *list = NULL;
 	DIR *dp;
-	void *handle;
+	void *dlhandle;
 	struct dirent *ep;
 	char buf[256];
 
@@ -40,17 +42,17 @@ void *open_plugins()
 			continue;
 
 		snprintf(buf, 256, "/tmp/%s", ep->d_name);
-		handle = dlopen(buf , RTLD_NOW | RTLD_LOCAL);
-		if (!handle)
+		dlhandle = dlopen(buf , RTLD_NOW | RTLD_LOCAL);
+		if (!dlhandle)
 			continue;
 
-		desc = dlsym(handle, "shout_plugin");
+		desc = dlsym(dlhandle, "shout_plugin");
 		if (!desc || desc->api_version != PLUGIN_API_VERSION) {
-			dlclose(handle);
+			dlclose(dlhandle);
 			continue;
 		}	
 		printf("registering file %s (%s)\n", ep->d_name, desc->name);
-		list = register_plugins(list, desc);
+		list = register_plugins(list, desc, dlhandle);
 	}
 	closedir(dp);
 	return list;
@@ -63,6 +65,7 @@ void close_plugins(void *plugins)
 
 	while (list) {
 		listtmp = list;
+		dlclose(list->dlhandle);
 		free(list);
 		list = listtmp->next;
 	}
