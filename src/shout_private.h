@@ -72,8 +72,6 @@
 
 #define SHOUT_BUFSIZE 4096
 
-#define MAXPLUGINS 16
-
 typedef struct _shout_tls shout_tls_t;
 
 typedef struct _shout_buf {
