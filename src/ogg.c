@@ -43,6 +43,8 @@ typedef struct {
 	char bos;
 } ogg_data_t;
 
+static char *shout_ogg_mimes[] = {"application/ogg", NULL};
+
 /* -- static prototypes -- */
 static int send_ogg(shout_t *self, const unsigned char *data, size_t len);
 static void close_ogg(shout_t *self);
@@ -203,3 +205,19 @@ static int send_page(shout_t *self, ogg_page *page)
 
 	return SHOUTERR_SUCCESS;
 }
+
+static int open_check(shout_t *self) {
+	if (self->protocol != SHOUT_PROTOCOL_HTTP)
+		return SHOUTERR_UNSUPPORTED;
+	else
+		return SHOUTERR_SUCCESS;
+}
+
+shout_plugin_desc shout_plugin =
+{
+	.api_version = PLUGIN_API_VERSION,
+	.name  = "ogg",
+	.mimes = shout_ogg_mimes,
+	.open  = shout_open_ogg,
+	.open_check = open_check,
+};
