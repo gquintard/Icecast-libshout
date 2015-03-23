@@ -63,6 +63,8 @@ int shout_create_icy_request(shout_t *self)
 			break;
 		if (shout_queue_printf(self, "icy-br:%s\n\n", bitrate))
 			break;
+		if (self->mime && queue_printf(self,  "Content-Type: %s\r\n", self->mime)
+			break;
 
 		ret = SHOUTERR_SUCCESS;
 	} while (0);
