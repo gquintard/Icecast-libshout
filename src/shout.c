@@ -167,6 +167,8 @@ void shout_free(shout_t *self)
 
 int shout_open(shout_t *self)
 {
+	int ret = SHOUTERR_SUCCESS;
+
 	/* sanity check */
 	if (!self)
 		return SHOUTERR_INSANE;
@@ -174,8 +176,10 @@ int shout_open(shout_t *self)
 		return SHOUTERR_CONNECTED;
 	if (!self->host || !self->password || !self->port)
 		return self->error = SHOUTERR_INSANE;
-	if (self->format == SHOUT_FORMAT_OGG && self->protocol != SHOUT_PROTOCOL_HTTP)
-		return self->error = SHOUTERR_UNSUPPORTED;
+	if (self->plugin &&
+			self->plugin->open_check &&
+			SHOUTERR_SUCCESS != (ret = self->plugin->open_check(self)))
+		return ret;
 
 	return self->error = try_connect(self);
 }
@@ -849,9 +853,10 @@ int shout_set_format(shout_t *self, unsigned int format)
 
 	if (format == SHOUT_FORMAT_MP3)
 		return shout_set_mime(self, "audio/mpeg"); 
+	else if (format == SHOUT_FORMAT_OGG)
+		return shout_set_mime(self, "application/ogg");
 
-	if (format != SHOUT_FORMAT_OGG
-	 && format != SHOUT_FORMAT_WEBM
+	if (format != SHOUT_FORMAT_WEBM
 	 && format != SHOUT_FORMAT_WEBMAUDIO)
 		return self->error = SHOUTERR_UNSUPPORTED;
 
@@ -1258,10 +1263,6 @@ retry:
 		}
 
 		switch (self->format) {
-		case SHOUT_FORMAT_OGG:
-			if ((rc = self->error = shout_open_ogg(self)) != SHOUTERR_SUCCESS)
-                                goto failure;
-			break;
 		case SHOUT_FORMAT_WEBM:
 		case SHOUT_FORMAT_WEBMAUDIO:
 			if ((rc = self->error = shout_open_webm(self)) != SHOUTERR_SUCCESS)
@@ -1386,17 +1387,6 @@ static int create_request(shout_t *self)
 		return shout_create_xaudiocast_request(self);
 	else if (self->protocol == SHOUT_PROTOCOL_ICY)
 		return shout_create_icy_request(self);
-
-	return self->error = SHOUTERR_UNSUPPORTED;
-}
-
-static int parse_response(shout_t *self)
-{
-	if (self->protocol == SHOUT_PROTOCOL_HTTP)
-		return shout_parse_http_response(self);
-	else if (self->protocol == SHOUT_PROTOCOL_XAUDIOCAST ||
-		 self->protocol == SHOUT_PROTOCOL_ICY)
-		return shout_parse_xaudiocast_response(self);
 
 	return self->error = SHOUTERR_UNSUPPORTED;
 }
