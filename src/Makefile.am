@@ -21,7 +21,7 @@ endif
 
 SUBDIRS = common/avl common/net common/timing common/httpp $(MAYBE_THREAD)
 
-lib_LTLIBRARIES = libshout.la libshout_ogg.la libshout_mp3.la
+lib_LTLIBRARIES = libshout.la libshout_mp3.la libshout_webm.la libshout_ogg.la
 libshout_la_LDFLAGS = -version-info 5:0:2
 
 EXTRA_DIST = theora.c speex.c tls.c
