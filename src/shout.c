@@ -1260,17 +1260,15 @@ retry:
                         goto failure;
 		}
 
-		switch (self->format) {
-		case SHOUT_FORMAT_PLUGIN:
-			if (!self->plugin || !self->plugin->open)
-				goto failure;
-			if ((rc = self->error = self->plugin->open(self)) != SHOUTERR_SUCCESS)
-				goto failure;
-			break;
-		default:
-                        rc = SHOUTERR_INSANE;
-                        goto failure;
+		if (self->format != SHOUT_FORMAT_PLUGIN) {
+			rc = SHOUTERR_INSANE;
+			goto failure;
 		}
+		if (!self->plugin ||
+				!self->plugin->open ||
+				(rc = self->error = self->plugin->open(self)) != SHOUTERR_SUCCESS)
+			goto failure;
+		break;
 
 	case SHOUT_STATE_CONNECTED:
 		self->state = SHOUT_STATE_CONNECTED;
