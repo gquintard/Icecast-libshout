@@ -68,7 +68,6 @@ void shout_init(void)
 		return;
 
 	sock_initialize();
-
 	plugins = open_plugins();
 	_initialized = 1;
 }
