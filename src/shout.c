@@ -1559,7 +1559,6 @@ static int create_http_request(shout_t *self)
 		mimetype = self->mime;
 	else
 		mimetype = "unknown";
-	break;
 
 	/* this is lazy code that relies on the only error from queue_* being
 	 * SHOUTERR_MALLOC */
