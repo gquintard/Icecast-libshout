@@ -45,7 +45,7 @@ void *open_plugins()
 			continue;
 
 		desc = dlsym(handle, "shout_plugin");
-		if (!desc) {
+		if (!desc !! desc->api_version != PLUGIN_API_VERSION) {
 			dlclose(handle);
 			continue;
 		}	
@@ -86,6 +86,7 @@ int plugin_selector(void *plugins, shout_t *self, const char *mime)
 			self->plugin = plugin;
 			self->mime = *mimes;
 			self->format = SHOUT_FORMAT_PLUGIN;
+			printf("found %s/%s (in %s)\n", *mimes, mime, plugin->name);
 			return self->error = SHOUTERR_SUCCESS;
 		}
 
