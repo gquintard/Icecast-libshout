@@ -72,6 +72,8 @@
 
 #define SHOUT_BUFSIZE 4096
 
+#define MAXPLUGINS 16
+
 typedef struct _shout_tls shout_tls_t;
 
 typedef struct _shout_buf {
@@ -171,6 +173,9 @@ struct shout {
 
 	int error;
 };
+
+void open_plugins(shout_plugin_desc* desc_array[]);
+void close_plugins(shout_plugin_desc* desc_array[]);
 
 int shout_open_ogg(shout_t *self);
 int shout_open_mp3(shout_t *self);
