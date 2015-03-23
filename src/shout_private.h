@@ -174,11 +174,10 @@ struct shout {
 	int error;
 };
 
-void open_plugins(shout_plugin_desc* desc_array[]);
-void close_plugins(shout_plugin_desc* desc_array[]);
+void open_plugins(shout_plugin_desc** desc_array);
+void close_plugins(shout_plugin_desc** desc_array);
 
 int shout_open_ogg(shout_t *self);
-int shout_open_mp3(shout_t *self);
 int shout_open_webm(shout_t *self);
 
 #ifdef HAVE_OPENSSL
