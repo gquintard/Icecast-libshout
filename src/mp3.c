@@ -326,4 +326,5 @@ shout_plugin_desc shout_plugin =
 	.name  = "mp3",
 	.mimes = shout_mp3_mimes,
 	.open  = shout_open_mp3,
+	.open_check = NULL;
 };
