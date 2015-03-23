@@ -189,6 +189,12 @@ int shout_conn_recoverable(shout_t *self);
 void open_plugins(shout_plugin_desc* desc_array[]);
 void close_plugins(shout_plugin_desc* desc_array[]);
 
+void open_plugins(shout_plugin_desc** desc_array);
+void close_plugins(shout_plugin_desc** desc_array);
+
+int shout_open_ogg(shout_t *self);
+int shout_open_webm(shout_t *self);
+
 #ifdef HAVE_OPENSSL
 shout_tls_t *shout_tls_new(shout_t *self, sock_t socket);
 int shout_tls_try_connect(shout_tls_t *tls);
