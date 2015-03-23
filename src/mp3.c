@@ -93,6 +93,8 @@ static const unsigned int samplerate[3][4] =
 	{ 11025, 8000, 8000, 0 }
 };
 
+static char *shout_mp3_mimes[] = {"audio/mpeg", NULL};
+
 /* -- static prototypes -- */
 static int send_mp3(shout_t *self, const unsigned char *data, size_t len);
 static void close_mp3(shout_t *self);
@@ -317,3 +319,10 @@ static void close_mp3(shout_t *self)
 
 	free(mp3_data);
 }
+
+shout_plugin_desc shout_plugin =
+{
+	.name  = "mp3",
+	.mimes = shout_mp3_mimes,
+	.open  = shout_open_mp3
+};
