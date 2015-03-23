@@ -262,6 +262,7 @@ typedef struct {
 	char *name;   /* human readable plugin name */
 	char **mimes; /* null terminated string array*/
 	int (* open)(shout_t *self);
+	int (* open_check)(shout_t *self);
 } shout_plugin_desc;
 
 #ifdef __cplusplus
