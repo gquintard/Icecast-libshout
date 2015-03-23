@@ -58,7 +58,7 @@ static int parse_response(shout_t *self);
 
 /* -- static data -- */
 static int _initialized = 0;
-static shout_plugin_desc* desc_array[MAXPLUGINS] = {0};
+static void *plugins = NULL;
 
 /* -- public functions -- */
 
@@ -69,7 +69,7 @@ void shout_init(void)
 
 	sock_initialize();
 
-	open_plugins(desc_array);
+	plugins = open_plugins();
 	_initialized = 1;
 }
 
@@ -78,7 +78,7 @@ void shout_shutdown(void)
 	if (!_initialized)
 		return;
 
-	close_plugins(desc_array);
+	close_plugins(plugins);
 	sock_shutdown();
 	_initialized = 0;
 }
@@ -872,23 +872,7 @@ unsigned int shout_get_format(shout_t* self)
 /* find the first plugin corresponding to our mime */
 int shout_set_mime(shout_t *self, const char *mime)
 {
-	int i;
-	int j;
-	shout_plugin_desc *desc = NULL;
-	for (i=0; i < MAXPLUGINS && desc_array[i]; i++) {
-		desc = desc_array[i];
-		for (j=0; desc->mimes[j]; j++) {
-			if (strcmp(mime, desc->mimes[j]))
-				continue;
-
-			/* XXX: strdup?  probably not useful as desc won't change */
-			self->plugin = desc;
-			self->mime = desc->mimes[j];
-			self->format = SHOUT_FORMAT_PLUGIN;
-			return self->error = SHOUTERR_SUCCESS;
-		}
-	}
-	return self->error = SHOUTERR_UNSUPPORTED;
+	return plugin_selector(plugins, self, mime);
 }
 
 const char * shout_get_mime(shout_t *self, const char *mime)
