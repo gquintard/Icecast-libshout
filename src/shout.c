@@ -871,14 +871,12 @@ int shout_set_format(shout_t *self, unsigned int format)
 		return shout_set_mime(self, "audio/mpeg"); 
 	else if (format == SHOUT_FORMAT_OGG)
 		return shout_set_mime(self, "application/ogg");
+	else if (format == SHOUT_FORMAT_WEBM)
+		return shout_set_mime(self, "video/webm");
+	else if (format == SHOUT_FORMAT_WEBMAUDIO)
+		return shout_set_mime(self, "audio/webm");
 
-	if (format != SHOUT_FORMAT_WEBM
-	 && format != SHOUT_FORMAT_WEBMAUDIO)
-		return self->error = SHOUTERR_UNSUPPORTED;
-
-	self->format = format;
-
-	return self->error = SHOUTERR_SUCCESS;
+	return self->error = SHOUTERR_UNSUPPORTED;
 }
 
 unsigned int shout_get_format(shout_t* self)
@@ -1402,11 +1400,6 @@ retry:
 		}
 
 		switch (self->format) {
-		case SHOUT_FORMAT_WEBM:
-		case SHOUT_FORMAT_WEBMAUDIO:
-			if ((rc = self->error = shout_open_webm(self)) != SHOUTERR_SUCCESS)
-				goto failure;
-			break;
 		case SHOUT_FORMAT_PLUGIN:
 			if (!self->plugin || !self->plugin->open)
 				goto failure;
@@ -1561,12 +1554,6 @@ static int create_http_request(shout_t *self)
 	const char *mimetype;
 
 	switch (self->format) {
-	case SHOUT_FORMAT_WEBM:
-		mimetype = "video/webm";
-		break;
-	case SHOUT_FORMAT_WEBMAUDIO:
-		mimetype = "audio/webm";
-		break;
 	case SHOUT_FORMAT_PLUGIN:
 		if (self->mime)
 			mimetype = self->mime;

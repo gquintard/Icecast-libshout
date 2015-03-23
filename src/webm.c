@@ -35,6 +35,8 @@
 
 /* -- local datatypes -- */
 
+static char *shout_mp3_mimes[] = {"video/webm", "audio/webm", NULL};
+
 /* no local state */
 
 /* -- static prototypes -- */
@@ -65,3 +67,12 @@ static void close_webm(shout_t *self)
 {
 	/* no local state */
 }
+
+shout_plugin_desc shout_plugin =
+{
+	.api_version = PLUGIN_API_VERSION,
+	.name  = "webm",
+	.mimes = shout_webm_mimes,
+	.open  = shout_open_webm,
+	.open_check = NULL
+};
