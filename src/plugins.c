@@ -72,7 +72,7 @@ void close_plugins(void *plugins)
 	}
 }
 
-int plugin_selector(void *plugins, shout_t *self, const char *mime)
+int plugin_selector(shout_t *self, void *plugins, const char *mime)
 {
 	struct plugin_list *list = (struct plugin_list *)plugins;
 	shout_plugin_desc *plugin = NULL;
