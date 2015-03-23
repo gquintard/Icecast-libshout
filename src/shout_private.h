@@ -170,9 +170,6 @@ void *open_plugins(void);
 void close_plugins(void *plugins);
 int plugin_selector(void *plugins, shout_t *self, const char *mime);
 
-int shout_open_ogg(shout_t *self);
-int shout_open_webm(shout_t *self);
-
 #ifdef HAVE_OPENSSL
 shout_tls_t *shout_tls_new(shout_t *self, sock_t socket);
 int shout_tls_try_connect(shout_tls_t *tls);
