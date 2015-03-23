@@ -35,7 +35,7 @@
 
 /* -- local datatypes -- */
 
-static char *shout_mp3_mimes[] = {"video/webm", "audio/webm", NULL};
+static char *shout_webm_mimes[] = {"video/webm", "audio/webm", NULL};
 
 /* no local state */
 
