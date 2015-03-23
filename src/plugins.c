@@ -45,7 +45,7 @@ void *open_plugins()
 			continue;
 
 		desc = dlsym(handle, "shout_plugin");
-		if (!desc !! desc->api_version != PLUGIN_API_VERSION) {
+		if (!desc || desc->api_version != PLUGIN_API_VERSION) {
 			dlclose(handle);
 			continue;
 		}	
