@@ -47,8 +47,6 @@
 # define inline 	_inline
 #endif
 
-#define MAXPLUGINS 16
-
 /* -- local prototypes -- */
 static int send_queue(shout_t *self);
 static int get_response(shout_t *self);
@@ -64,27 +62,6 @@ static shout_plugin_desc* desc_array[MAXPLUGINS] = {0};
 
 /* -- public functions -- */
 
-char *shout_mp3_mimes[] = {"audio/mpeg", NULL};
-shout_plugin_desc shout_mp3_desc = {
-	.name  = "mp3",
-	.mimes = shout_mp3_mimes,
-	.open  = shout_open_mp3
-};
-
-static void register_plugins(shout_plugin_desc *sd);
-static void register_plugins(shout_plugin_desc *sd)
-{
-	int i = 0;
-	/* find first empty slot (change that to a linked list)*/
-	while(i < MAXPLUGINS && desc_array[i])
-		i++;
-
-	if (i == MAXPLUGINS)
-		return;
-
-	desc_array[i] = sd;
-}
-
 void shout_init(void)
 {
 	if (_initialized)
@@ -92,7 +69,7 @@ void shout_init(void)
 
 	sock_initialize();
 
-	register_plugins(&shout_mp3_desc);
+	open_plugins(desc_array);
 	_initialized = 1;
 }
 
@@ -101,6 +78,7 @@ void shout_shutdown(void)
 	if (!_initialized)
 		return;
 
+	close_plugins(desc_array);
 	sock_shutdown();
 	_initialized = 0;
 }

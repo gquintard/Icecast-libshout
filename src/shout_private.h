@@ -72,6 +72,8 @@
 
 #define SHOUT_BUFSIZE 4096
 
+#define MAXPLUGINS 16
+
 typedef struct _shout_tls shout_tls_t;
 
 typedef struct _shout_buf {
@@ -183,6 +185,9 @@ ssize_t shout_queue_collect(shout_buf_t *queue, char **buf);
 ssize_t shout_conn_read(shout_t *self, void *buf, size_t len);
 ssize_t shout_conn_write(shout_t *self, const void *buf, size_t len);
 int shout_conn_recoverable(shout_t *self);
+
+void open_plugins(shout_plugin_desc* desc_array[]);
+void close_plugins(shout_plugin_desc* desc_array[]);
 
 #ifdef HAVE_OPENSSL
 shout_tls_t *shout_tls_new(shout_t *self, sock_t socket);
