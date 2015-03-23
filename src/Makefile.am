@@ -34,6 +34,7 @@ libshout_la_LIBADD = common/net/libicenet.la common/timing/libicetiming.la commo
 
 # plugins
 libshout_mp3_la_SOURCES = mp3.c
+libshout_webm_la_SOURCES = webm.c
 libshout_ogg_la_SOURCES = ogg.c $(MAYBE_THEORA) $(MAYBE_SPEEX)
 
 INCLUDES = -I$(top_builddir)/include -I./common/
