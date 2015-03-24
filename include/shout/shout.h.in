@@ -261,8 +261,10 @@ typedef struct {
 	int api_version;
 	char *name;   /* human readable plugin name */
 	char **mimes; /* null terminated string array*/
-	int (* open)(shout_t *self);
 	int (* open_check)(shout_t *self);
+	int (* open)(shout_t *self);
+	int (* send)(shout_t *self, const unsigned char *data, size_t len);
+	void (* close)(shout_t *self);
 } shout_plugin_desc;
 
 #ifdef __cplusplus
