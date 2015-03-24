@@ -41,13 +41,10 @@ static char *shout_webm_mimes[] = {"video/webm", "audio/webm", NULL};
 
 /* -- static prototypes -- */
 static int send_webm(shout_t *self, const unsigned char *data, size_t len);
-static void close_webm(shout_t *self);
 
 int shout_open_webm(shout_t *self)
 {
 	self->format_data = NULL;
-	self->send = send_webm;
-	self->close = close_webm;
 
 	return SHOUTERR_SUCCESS;
 }
@@ -63,12 +60,6 @@ static int send_webm(shout_t *self, const unsigned char *data, size_t len)
 	return self->error = SHOUTERR_SUCCESS;
 }
 
-static void close_webm(shout_t *self)
-{
-	/* no local state */
-	(void)self;
-}
-
 shout_plugin_desc shout_plugin =
 {
 	.api_version = PLUGIN_API_VERSION,
@@ -77,5 +68,5 @@ shout_plugin_desc shout_plugin =
 	.open_check = NULL,
 	.open = shout_open_webm,
 	.send = send_webm,
-	.close = close_webm
+	.close = NULL
 };
