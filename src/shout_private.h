@@ -152,8 +152,6 @@ struct shout {
 	int nonblocking;
 
 	void *format_data;
-	int (*send)(shout_t* self, const unsigned char* buff, size_t len);
-	void (*close)(shout_t* self);
 
 	shout_queue_t rqueue;
 	shout_queue_t wqueue;

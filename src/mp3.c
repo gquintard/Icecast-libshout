@@ -110,9 +110,6 @@ int shout_open_mp3(shout_t *self)
 		return SHOUTERR_MALLOC;
 	self->format_data = mp3_data;
 
-	self->send = send_mp3;
-	self->close = close_mp3;
-
 	return SHOUTERR_SUCCESS;
 }
 

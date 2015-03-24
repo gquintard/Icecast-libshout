@@ -193,8 +193,10 @@ int shout_close(shout_t *self)
 	if (self->state == SHOUT_STATE_UNCONNECTED)
 		return self->error = SHOUTERR_UNCONNECTED;
 
-	if (self->state == SHOUT_STATE_CONNECTED && self->close)
-		self->close(self);
+	if (self->state == SHOUT_STATE_CONNECTED &&
+			self->plugin &&
+			self->plugin->close)
+		self->plugin->close(self);
 
 #ifdef HAVE_OPENSSL
 	if (self->tls)
@@ -226,7 +228,10 @@ int shout_send(shout_t *self, const unsigned char *data, size_t len)
 	if (!len)
 		return send_queue(self);
 
-	return self->send(self, data, len);
+	if (!self->plugin || !self->plugin->send)
+		return SHOUTERR_INSANE;
+
+	return self->plugin->send(self, data, len);
 }
 
 ssize_t shout_send_raw(shout_t *self, const unsigned char *data, size_t len)
