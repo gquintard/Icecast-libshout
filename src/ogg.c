@@ -218,6 +218,8 @@ shout_plugin_desc shout_plugin =
 	.api_version = PLUGIN_API_VERSION,
 	.name  = "ogg",
 	.mimes = shout_ogg_mimes,
-	.open  = shout_open_ogg,
 	.open_check = open_check,
+	.open  = shout_open_ogg,
+	.send = send_ogg,
+	.close = close_ogg
 };

@@ -74,6 +74,8 @@ shout_plugin_desc shout_plugin =
 	.api_version = PLUGIN_API_VERSION,
 	.name  = "webm",
 	.mimes = shout_webm_mimes,
-	.open  = shout_open_webm,
-	.open_check = NULL
+	.open_check = NULL,
+	.open = shout_open_webm,
+	.send = send_webm,
+	.close = close_webm
 };
