@@ -77,9 +77,6 @@ int shout_open_ogg(shout_t *self)
 	ogg_sync_init(&ogg_data->oy);
 	ogg_data->bos = 1;
 
-	self->send = send_ogg;
-	self->close = close_ogg;
-
 	return SHOUTERR_SUCCESS;
 }
 
