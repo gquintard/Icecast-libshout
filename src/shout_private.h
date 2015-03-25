@@ -164,6 +164,11 @@ struct shout {
 	int error;
 };
 
+/* internal plugins */
+shout_plugin_desc shout_plugin_mp3;
+shout_plugin_desc shout_plugin_webm;
+shout_plugin_desc shout_plugin_ogg;
+
 void *open_plugins(void);
 void close_plugins(void *plugins);
 int plugin_selector(shout_t *self, void *plugins, const char *mime);

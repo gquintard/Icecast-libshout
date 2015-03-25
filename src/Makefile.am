@@ -21,21 +21,16 @@ endif
 
 SUBDIRS = common/avl common/net common/timing common/httpp $(MAYBE_THREAD)
 
-lib_LTLIBRARIES = libshout.la libshout_mp3.la libshout_webm.la libshout_ogg.la
+lib_LTLIBRARIES = libshout.la
 libshout_la_LDFLAGS = -version-info 5:0:2
 
 EXTRA_DIST = theora.c speex.c tls.c
 noinst_HEADERS = shout_ogg.h shout_private.h util.h
-libshout_la_SOURCES = shout.c util.c plugins.c $(MAYBE_TLS)
+libshout_la_SOURCES = shout.c util.c plugins.c ogg.c vorbis.c mp3.c webm.c opus.c $(MAYBE_THEORA) $(MAYBE_SPEEX) $(MAYBE_TLS)
 AM_CFLAGS = @XIPH_CFLAGS@
 
 libshout_la_LIBADD = common/net/libicenet.la common/timing/libicetiming.la common/avl/libiceavl.la\
 		common/httpp/libicehttpp.la $(MAYBE_THREAD_LIB) $(THEORA_LIBS) $(VORBIS_LIBS) $(SPEEX_LIBS) @XIPH_LIBS@
-
-# plugins
-libshout_mp3_la_SOURCES = mp3.c
-libshout_webm_la_SOURCES = webm.c
-libshout_ogg_la_SOURCES = ogg.c vorbis.c opus.c $(MAYBE_THEORA) $(MAYBE_SPEEX)
 
 INCLUDES = -I$(top_builddir)/include -I./common/
 

@@ -60,7 +60,7 @@ static int send_webm(shout_t *self, const unsigned char *data, size_t len)
 	return self->error = SHOUTERR_SUCCESS;
 }
 
-shout_plugin_desc shout_plugin =
+shout_plugin_desc shout_plugin_webm =
 {
 	.api_version = PLUGIN_API_VERSION,
 	.name  = "webm",
