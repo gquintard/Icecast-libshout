@@ -110,6 +110,12 @@ then
   AC_DEFINE([NO_THREAD], 1, [Define if you don't want to use the thread library])
 fi
 
+if test "x$PLUGIN_DIR" = "x"; then
+	PLUGIN_DIR=/tmp
+fi
+AC_ARG_ENABLE([plugins], [activate plugins lookup (define PLUGIN_DIR)], 
+	[AC_DEFINE_UNQUOTED([PLUGIN_DIR], ["$PLUGIN_DIR"], [define where to look for plugins])])
+
 SHOUT_REQUIRES="ogg"
 
 PKG_CHECK_MODULES(VORBIS, vorbis, [

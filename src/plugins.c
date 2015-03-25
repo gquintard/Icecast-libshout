@@ -26,22 +26,23 @@ static struct plugin_list* register_plugins(struct plugin_list *list, shout_plug
 
 void *open_plugins()
 {
-	shout_plugin_desc *desc = NULL;
 	struct plugin_list *list = NULL;
+
+#ifdef PLUGIN_DIR
+	shout_plugin_desc *desc = NULL;
 	DIR *dp;
 	void *dlhandle;
 	struct dirent *ep;
 	char buf[256];
-
-
-	dp = opendir ("/tmp/");
+	dp = opendir (PLUGIN_DIR);
 	if (!dp)
 		return NULL;
 	while ((ep = readdir(dp))) {
-		if (!strncmp(ep->d_name, "libshout_", 10))
+
+		if (strncmp(ep->d_name, "libshout_", 9))
 			continue;
 
-		snprintf(buf, 256, "/tmp/%s", ep->d_name);
+		snprintf(buf, 256, PLUGIN_DIR "/%s", ep->d_name);
 		dlhandle = dlopen(buf , RTLD_NOW | RTLD_LOCAL);
 		if (!dlhandle)
 			continue;
@@ -51,10 +52,16 @@ void *open_plugins()
 			dlclose(dlhandle);
 			continue;
 		}	
-		printf("registering file %s (%s)\n", ep->d_name, desc->name);
 		list = register_plugins(list, desc, dlhandle);
 	}
 	closedir(dp);
+#endif /* PLUGIN_DIR */
+
+	/* baked-in plugins */
+	list = register_plugins(list, &shout_plugin_mp3, NULL);
+	list = register_plugins(list, &shout_plugin_webm, NULL);
+	list = register_plugins(list, &shout_plugin_ogg, NULL);
+
 	return list;
 }
 
@@ -88,7 +95,6 @@ int plugin_selector(shout_t *self, void *plugins, const char *mime)
 			self->plugin = plugin;
 			self->mime = *mimes;
 			self->format = SHOUT_FORMAT_PLUGIN;
-			printf("found %s/%s (in %s)\n", *mimes, mime, plugin->name);
 			return self->error = SHOUTERR_SUCCESS;
 		}
 

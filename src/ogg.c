@@ -210,7 +210,7 @@ static int open_check(shout_t *self) {
 		return SHOUTERR_SUCCESS;
 }
 
-shout_plugin_desc shout_plugin =
+shout_plugin_desc shout_plugin_ogg =
 {
 	.api_version = PLUGIN_API_VERSION,
 	.name  = "ogg",
