@@ -40,9 +40,10 @@ static char *shout_webm_mimes[] = {"video/webm", "audio/webm", NULL};
 /* no local state */
 
 /* -- static prototypes -- */
+static int shout_open_webm(shout_t *self);
 static int send_webm(shout_t *self, const unsigned char *data, size_t len);
 
-int shout_open_webm(shout_t *self)
+static int shout_open_webm(shout_t *self)
 {
 	self->format_data = NULL;
 
