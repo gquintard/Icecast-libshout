@@ -77,11 +77,9 @@ int plugin_selector(shout_t *self, void *plugins, const char *mime)
 	shout_plugin_desc *plugin = NULL;
 	char **mimes = NULL;
 
-	
 	do {
 		plugin = list->plugin; 
-
-		for (mimes = plugin->mimes; mimes; mimes++) {
+		for (mimes = plugin->mimes; *mimes; mimes++) {
 			if (strcmp(mime, *mimes))
 				continue;
 
