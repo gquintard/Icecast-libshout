@@ -58,7 +58,7 @@ void *open_plugins()
 #endif /* PLUGIN_DIR */
 
 	/* baked-in plugins */
-/*	list = register_plugins(list, &shout_plugin_mp3, NULL);*/
+	list = register_plugins(list, &shout_plugin_mp3, NULL);
 	list = register_plugins(list, &shout_plugin_webm, NULL);
 	list = register_plugins(list, &shout_plugin_ogg, NULL);
 
