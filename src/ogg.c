@@ -46,6 +46,7 @@ typedef struct {
 static char *shout_ogg_mimes[] = {"application/ogg", NULL};
 
 /* -- static prototypes -- */
+static int shout_open_ogg(shout_t *self);
 static int send_ogg(shout_t *self, const unsigned char *data, size_t len);
 static void close_ogg(shout_t *self);
 static int open_codec(ogg_codec_t *codec, ogg_page *page);
@@ -66,7 +67,7 @@ static codec_open_t codecs[] = {
 	NULL
 };
 
-int shout_open_ogg(shout_t *self)
+static int shout_open_ogg(shout_t *self)
 {
 	ogg_data_t *ogg_data;
 
