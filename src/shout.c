@@ -150,8 +150,13 @@ shout_t *shout_new(void)
         self->tls_mode = SHOUT_TLS_AUTO;
 #endif
 
+	if (shout_set_mime(self, LIBSHOUT_DEFAULT_MIME) != SHOUTERR_SUCCESS) {
+		shout_free(self);
+
+		return NULL;
+	}
+
 	self->port = LIBSHOUT_DEFAULT_PORT;
-	self->format = LIBSHOUT_DEFAULT_FORMAT;
 	self->protocol = LIBSHOUT_DEFAULT_PROTOCOL;
 
 	return self;
