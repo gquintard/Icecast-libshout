@@ -29,20 +29,31 @@ void *open_plugins()
 	struct plugin_list *list = NULL;
 
 #ifdef PLUGIN_DIR
+#define PMAXLEN 256
 	shout_plugin_desc *desc = NULL;
 	DIR *dp;
 	void *dlhandle;
 	struct dirent *ep;
-	char buf[256];
+	char buf[PMAXLEN];
+	int n;
+	char *p;
 	dp = opendir (PLUGIN_DIR);
 	if (!dp)
 		return NULL;
 	while ((ep = readdir(dp))) {
 
+		/* starts with libshout_ */
 		if (strncmp(ep->d_name, "libshout_", 9))
 			continue;
+		/* ends with .so */
+		p = strrchr(ep->d_name, '.');
+		if (!p || strncmp(p, ".so\0", 4))
+			continue;
 
-		snprintf(buf, 256, PLUGIN_DIR "/%s", ep->d_name);
+		n = snprintf(buf, PMAXLEN, PLUGIN_DIR "/%s", ep->d_name);
+		if (n >= PMAXLEN || n < 0)
+			continue;
+
 		dlhandle = dlopen(buf , RTLD_NOW | RTLD_LOCAL);
 		if (!dlhandle)
 			continue;
@@ -55,6 +66,7 @@ void *open_plugins()
 		list = register_plugins(list, desc, dlhandle);
 	}
 	closedir(dp);
+#undef PMAXLEN
 #endif /* PLUGIN_DIR */
 
 	/* baked-in plugins */
