@@ -43,7 +43,7 @@ typedef struct {
 	char bos;
 } ogg_data_t;
 
-static char *shout_ogg_mimes[] = {"application/ogg", NULL};
+static const char *shout_ogg_mimes[] = {"application/ogg", NULL};
 
 /* -- static prototypes -- */
 static int shout_open_ogg(shout_t *self);
@@ -211,7 +211,7 @@ static int open_check(shout_t *self) {
 		return SHOUTERR_SUCCESS;
 }
 
-shout_plugin_desc shout_plugin_ogg =
+const shout_plugin_desc shout_plugin_ogg =
 {
 	.api_version = PLUGIN_API_VERSION,
 	.name  = "ogg",

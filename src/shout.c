@@ -58,7 +58,7 @@ static int parse_response(shout_t *self);
 
 /* -- static data -- */
 static int _initialized = 0;
-static void *plugins = NULL;
+static const void *plugins = NULL;
 
 /* -- public functions -- */
 
