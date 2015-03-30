@@ -887,6 +887,8 @@ int shout_set_mime(shout_t *self, const char *mime)
 	return plugin_selector(self, plugins, mime);
 }
 
+/* retrieve the current mime
+ * careful, it's a constant, strdup if you wish to modify it */
 const char * shout_get_mime(shout_t *self, const char *mime)
 {
 	return self->mime;
