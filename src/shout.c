@@ -1392,3 +1392,14 @@ static int create_request(shout_t *self)
 
 	return self->error = SHOUTERR_UNSUPPORTED;
 }
+
+static int parse_response(shout_t *self)
+{
+	if (self->protocol == SHOUT_PROTOCOL_HTTP)
+		return shout_parse_http_response(self);
+	else if (self->protocol == SHOUT_PROTOCOL_XAUDIOCAST ||
+		 self->protocol == SHOUT_PROTOCOL_ICY)
+		return shout_parse_xaudiocast_response(self);
+
+	return self->error = SHOUTERR_UNSUPPORTED;
+}
