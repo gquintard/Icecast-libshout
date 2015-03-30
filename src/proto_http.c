@@ -64,23 +64,14 @@ int shout_create_http_request(shout_t *self)
 	const char *key, *val;
 	const char *mimetype;
 
-	switch (self->format) {
-	case SHOUT_FORMAT_OGG:
-		mimetype = "application/ogg";
-		break;
-	case SHOUT_FORMAT_MP3:
-		mimetype = "audio/mpeg";
-		break;
-	case SHOUT_FORMAT_WEBM:
-		mimetype = "video/webm";
-		break;
-	case SHOUT_FORMAT_WEBMAUDIO:
-		mimetype = "audio/webm";
-		break;
-	default:
+	if (self->format != SHOUT_FORMAT_PLUGIN)
 		return SHOUTERR_INSANE;
-		break;
-	}
+
+	/* we should always have a mime, shouldn't we ?*/
+	if (self->mime)
+		mimetype = self->mime;
+	else
+		mimetype = "unknown";
 
 	/* this is lazy code that relies on the only error from queue_* being
 	 * SHOUTERR_MALLOC */
