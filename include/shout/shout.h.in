@@ -258,9 +258,9 @@ int shout_metadata_add(shout_metadata_t *self, const char *name, const char *val
 
 #define PLUGIN_API_VERSION 1
 typedef struct {
-	int api_version;
-	char *name;   /* human readable plugin name */
-	char **mimes; /* null terminated string array*/
+	const int api_version;
+	const char *name;   /* human readable plugin name */
+	const char **mimes; /* null terminated string array*/
 	int (* open_check)(shout_t *self);
 	int (* open)(shout_t *self);
 	int (* send)(shout_t *self, const unsigned char *data, size_t len);

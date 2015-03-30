@@ -35,7 +35,7 @@
 
 /* -- local datatypes -- */
 
-static char *shout_webm_mimes[] = {"video/webm", "audio/webm", NULL};
+static const char *shout_webm_mimes[] = {"video/webm", "audio/webm", NULL};
 
 /* no local state */
 
@@ -61,7 +61,7 @@ static int send_webm(shout_t *self, const unsigned char *data, size_t len)
 	return self->error = SHOUTERR_SUCCESS;
 }
 
-shout_plugin_desc shout_plugin_webm =
+const shout_plugin_desc shout_plugin_webm =
 {
 	.api_version = PLUGIN_API_VERSION,
 	.name  = "webm",

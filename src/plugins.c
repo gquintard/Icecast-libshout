@@ -5,13 +5,13 @@
 #include "shout_private.h"
 
 typedef struct plugin_list {
-	shout_plugin_desc *plugin;
+	const shout_plugin_desc *plugin;
 	void *dlhandle;
-	struct plugin_list *next;
+	const struct plugin_list *next;
 } plugin_list;
 
-static struct plugin_list* register_plugins(struct plugin_list *list, shout_plugin_desc *desc, void *dlhandle);
-static struct plugin_list* register_plugins(struct plugin_list *list, shout_plugin_desc *desc, void *dlhandle)
+static const struct plugin_list* register_plugins(const struct plugin_list *list, const shout_plugin_desc *desc, void *dlhandle);
+static const struct plugin_list* register_plugins(const struct plugin_list *list, const shout_plugin_desc *desc, void *dlhandle)
 {
 	struct plugin_list *entry = malloc(sizeof(struct plugin_list));
 
@@ -24,9 +24,9 @@ static struct plugin_list* register_plugins(struct plugin_list *list, shout_plug
 	return entry;
 }
 
-void *open_plugins()
+const void *open_plugins()
 {
-	struct plugin_list *list = NULL;
+	const struct plugin_list *list = NULL;
 
 #ifdef PLUGIN_DIR
 #define PMAXLEN 256
@@ -77,10 +77,10 @@ void *open_plugins()
 	return list;
 }
 
-void close_plugins(void *plugins)
+void close_plugins(const void *plugins)
 {
-	struct plugin_list *list = (struct plugin_list *)plugins;
-	struct plugin_list *listtmp = NULL;
+	const struct plugin_list *list = (struct plugin_list *)plugins;
+	const struct plugin_list *listtmp = NULL;
 
 	while (list) {
 		listtmp = list->next;
@@ -91,11 +91,11 @@ void close_plugins(void *plugins)
 	}
 }
 
-int plugin_selector(shout_t *self, void *plugins, const char *mime)
+int plugin_selector(shout_t *self, const void *plugins, const char *mime)
 {
-	struct plugin_list *list = (struct plugin_list *)plugins;
-	shout_plugin_desc *plugin = NULL;
-	char **mimes = NULL;
+	const struct plugin_list *list = (struct plugin_list *)plugins;
+	const shout_plugin_desc *plugin = NULL;
+	const char **mimes = NULL;
 
 	do {
 		plugin = list->plugin; 
