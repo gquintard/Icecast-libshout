@@ -6,25 +6,25 @@
 #include "shout_private.h"
 
 typedef struct plugin_list {
-	const shout_plugin_desc *plugin;
+	const shout_plugin_format *plugin;
 	void *dlhandle;
 	const struct plugin_list *next;
 } plugin_list;
 
 /* simple helper to input plugin descriptions into a linked list*/
-static const struct plugin_list* register_plugins(const struct plugin_list *list, const shout_plugin_desc *desc, void *dlhandle);
-static const struct plugin_list* register_plugins(const struct plugin_list *list, const shout_plugin_desc *desc, void *dlhandle)
+static const struct plugin_list* register_plugins(const struct plugin_list *list, const shout_plugin_format *fmt, void *dlhandle);
+static const struct plugin_list* register_plugins(const struct plugin_list *list, const shout_plugin_format *fmt, void *dlhandle)
 {
 	struct plugin_list *entry = malloc(sizeof(struct plugin_list));
 
 	/* avoid null pointers as plugins */
-	assert(desc);
+	assert(fmt);
 
 	if (!entry)
 		return list;
 
 	entry->next = list;
-	entry->plugin = desc;
+	entry->plugin = fmt;
 	entry->dlhandle = dlhandle;
 	return entry;
 }
@@ -39,7 +39,7 @@ const void *open_plugins()
 
 #ifdef PLUGIN_DIR
 #define PMAXLEN 256
-	shout_plugin_desc *desc = NULL;
+	shout_plugin_format *fmt = NULL;
 	DIR *dp;
 	void *dlhandle;
 	struct dirent *ep;
@@ -71,13 +71,13 @@ const void *open_plugins()
 
 		/* retrieve the plugin description 
 		 * XXX: magic number as sanity check? */
-		desc = dlsym(dlhandle, "shout_plugin");
-		if (!desc || desc->api_version != PLUGIN_API_VERSION) {
+		fmt = dlsym(dlhandle, "shout_plugin");
+		if (!fmt || fmt->desc.api_version != PLUGIN_API_VERSION) {
 			dlclose(dlhandle);
 			continue;
 		}
 		/* everything looks sane, register this plugin*/
-		list = register_plugins(list, desc, dlhandle);
+		list = register_plugins(list, fmt, dlhandle);
 	}
 	closedir(dp);
 #undef PMAXLEN
@@ -113,7 +113,7 @@ void close_plugins(const void *plugins)
 int plugin_selector(shout_t *self, const void *plugins, const char *mime)
 {
 	const struct plugin_list *list = (struct plugin_list *)plugins;
-	const shout_plugin_desc *plugin = NULL;
+	const shout_plugin_format *plugin = NULL;
 	const char **mimes = NULL;
 
 	do {

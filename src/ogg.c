@@ -211,10 +211,10 @@ static int open_check(shout_t *self) {
 		return SHOUTERR_SUCCESS;
 }
 
-const shout_plugin_desc shout_plugin_ogg =
+const shout_plugin_format shout_plugin_ogg =
 {
-	.api_version = PLUGIN_API_VERSION,
-	.name  = "ogg",
+	.desc = {	.api_version = PLUGIN_API_VERSION,
+				.name  = "ogg" },
 	.mimes = shout_ogg_mimes,
 	.open_check = open_check,
 	.open  = shout_open_ogg,

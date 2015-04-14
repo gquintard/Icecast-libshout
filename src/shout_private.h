@@ -112,7 +112,7 @@ struct shout {
 	/* type of data being sent */
 	unsigned int format;
 	const char *mime;
-	const shout_plugin_desc *plugin;
+	const shout_plugin_format *plugin;
 
 	/* audio encoding parameters */
 	util_dict *audio_info;
@@ -178,9 +178,9 @@ ssize_t shout_conn_write(shout_t *self, const void *buf, size_t len);
 int shout_conn_recoverable(shout_t *self);
 
 /* internal plugins */
-const shout_plugin_desc shout_plugin_mp3;
-const shout_plugin_desc shout_plugin_webm;
-const shout_plugin_desc shout_plugin_ogg;
+const shout_plugin_format shout_plugin_mp3;
+const shout_plugin_format shout_plugin_webm;
+const shout_plugin_format shout_plugin_ogg;
 
 const void *open_plugins(void);
 void close_plugins(const void *plugins);
