@@ -256,17 +256,6 @@ void shout_metadata_free(shout_metadata_t *self);
  *   SHOUTERR_MALLOC if memory can't be allocated */
 int shout_metadata_add(shout_metadata_t *self, const char *name, const char *value);
 
-#define PLUGIN_API_VERSION 1
-typedef struct {
-	const int api_version;
-	const char *name;   /* human readable plugin name */
-	const char **mimes; /* null terminated string array*/
-	int (* open_check)(shout_t *self);
-	int (* open)(shout_t *self);
-	int (* send)(shout_t *self, const unsigned char *data, size_t len);
-	void (* close)(shout_t *self);
-} shout_plugin_desc;
-
 #ifdef __cplusplus
 }
 #endif

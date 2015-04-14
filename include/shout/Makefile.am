@@ -3,4 +3,4 @@
 AUTOMAKE_OPTIONS = foreign
 
 pkgincludedir = $(includedir)/shout
-nodist_pkginclude_HEADERS = shout.h
+nodist_pkginclude_HEADERS = shout.h plugins.h

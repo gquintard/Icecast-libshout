@@ -29,6 +29,7 @@
 #endif
 
 #include <shout/shout.h>
+#include <shout/plugins.h>
 #include <common/net/sock.h>
 #include <common/timing/timing.h>
 #include "util.h"
